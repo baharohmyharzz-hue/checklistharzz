@@ -1,430 +1,383 @@
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Misi Harian HarzzWeb</title>
-    <!-- Link Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
-    <style>
-        /* CSS native semula yang dibutuhkan */
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Arial', sans-serif;
-        }
-        body {
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            padding: 2rem 0;
-            position: relative;
-        }
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.3);
-            z-index: -1;
-        }
-        /* BACKGROUND MOBILE */
-        @media (max-width: 767.98px) {
-            body {
-                background-image: url('bg-japan.jpg');
-                z-index: 1;
-            }
-        }
-        /* BACKGROUND DESKTOP */
-        @media (min-width: 768px) {
-            body {
-                background-image: url('china nightcity.jpeg');
-                z-index: 1;
-            }
-        }
-        .main-title {
-            color: white;
-            text-align: center;
-            margin-bottom: 2rem;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
-        }
-        .countdown {
-            font-size: 1.2rem;
-            color: #2d3748;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            padding: 0.75rem;
-            background-color: rgba(226, 232, 240, 0.9);
-            border-radius: 0.5rem;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-        }
-        .checklist-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between; /* Biar nama akun ada di kanan */
-            padding: 0.8rem 0;
-            border-bottom: 1px solid #edf2f7;
-        }
-        .checklist-item:last-child {
-            border-bottom: none;
-        }
-        input[type="checkbox"] {
-            width: 1.2rem;
-            height: 1.2rem;
-            margin-right: 1rem;
-            cursor: pointer;
-        }
-        .checked label, .checked .account-name {
-            text-decoration: line-through;
-            color: #718096;
-        }
-        label {
-            font-size: 1.1rem;
-            color: #2d3748;
-            cursor: pointer;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-        }
-        .account-name {
-            font-size: 1rem;
-            color: #4a5568;
-            text-align: right;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis; /* Biar gak ke luar kalo nama panjang */
-            max-width: 45%; /* Lebar maksimum nama akun */
-        }
-        /* Tombol Submit */
-        .submit-button {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            margin-top: 1.5rem;
-            border: none;
-            border-radius: 8px;
-            color: white;
-            font-size: 1.1rem;
-            cursor: pointer;
-            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease-in-out;
-            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
-        }
-        .submit-button:disabled {
-            background-color: rgba(144, 238, 144, 0.9);
-            cursor: not-allowed;
-            box-shadow: none;
-            transform: scale(1);
-        }
-        .submit-button:not(:disabled) {
-            background-color: rgba(50, 205, 50, 0.9);
-            box-shadow: 0 4px 12px rgba(50, 205, 50, 0.7);
-        }
-        .submit-button:not(:disabled):hover {
-            background-color: rgba(0, 128, 0, 0.9);
-            box-shadow: 0 6px 15px rgba(0, 128, 0, 0.8);
-            transform: scale(1.05);
-        }
-        /* Pesan Selamat */
-        .message {
-            text-align: center;
-            margin-top: 1rem;
-            color: #2d3748;
-            font-weight: bold;
-            padding: 0.5rem;
-            border-radius: 8px;
-            background-color: rgba(212, 237, 218, 0.9);
-            min-height: 45px;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-        }
-        /* Card */
-        .card {
-            background-color: rgba(255, 255, 255, 0.85);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
-        }
-        .card-body h2 {
-            color: #2d3748;
-            text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h1 class="text-center fw-bold mb-5 main-title">Daftar Misi Harian Harzz</h1>
-
-        <div class="row g-4">
-            <!-- Checklist 1 (Item 1-10) -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 1</h2>
-                        <div class="countdown" id="countdown-1">Waktu tersisa sampai reset: 23:59:59</div>
-                        <div id="checklistContainer-1"></div>
-                        <button class="submit-button" id="submitButton-1" disabled>Submit Checklist 1</button>
-                        <div class="message" id="message-1"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Checklist 2 (Item 11-20) -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 2</h2>
-                        <div class="countdown" id="countdown-2">Waktu tersisa sampai reset: 23:59:59</div>
-                        <div id="checklistContainer-2"></div>
-                        <button class="submit-button" id="submitButton-2" disabled>Submit Checklist 2</button>
-                        <div class="message" id="message-2"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Checklist 3 (Item 21-30) -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 3</h2>
-                        <div class="countdown" id="countdown-3">Waktu tersisa sampai reset: 23:59:59</div>
-                        <div id="checklistContainer-3"></div>
-                        <button class="submit-button" id="submitButton-3" disabled>Submit Checklist 3</button>
-                        <div class="message" id="message-3"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Checklist 4 (Item 31-40) -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 4</h2>
-                        <div class="countdown" id="countdown-4">Waktu tersisa sampai reset: 23:59:59</div>
-                        <div id="checklistContainer-4"></div>
-                        <button class="submit-button" id="submitButton-4" disabled>Submit Checklist 4</button>
-                        <div class="message" id="message-4"></div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Checklist 5 (Item 41-50) -->
-            <div class="col-md-6 col-lg-4">
-                <div class="card shadow-sm h-100">
-                    <div class="card-body">
-                        <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 5</h2>
-                        <div class="countdown" id="countdown-5">Waktu tersisa sampai reset: 23:59:59</div>
-                        <div id="checklistContainer-5"></div>
-                        <button class="submit-button" id="submitButton-5" disabled>Submit Checklist 5</button>
-                        <div class="message" id="message-5"></div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
-
-    <script>
-       // Daftar nama akun (1-50)
-const accountNames = [
-    "1. agustytyd30 ",
-    "2. agustytyd41 ",
-    "3. aguskuntul59",
-    "4. aguskunn78",
-    "5. aguskoncol47",
-    "6. aguslesnang24",
-    "7. aguskupling19",
-    "8. asepkanjud73",
-    "9. asepwalon76",
-    "10. aseprahmadt98",
-    "11. asepsuki59",
-    "12. udinsoftware03",
-    "13. teohernandesz12",
-    "14. michaelowennn23",
-    "15. taisemiyashiro45",
-    "16. kaorumitomaa56",
-    "17. malikthiaw67",
-    "18. marselinooo78",
-    "19. marteenpaes89",
-    "20. udinkunyad12",
-    "21. kenzispot55",
-    "22. erpankopi23",
-    "23. fauzytytyd23",
-    "24. agusknalpot98",
-    "25. alpinkunyad12",
-    "26. ucokmbappe62",
-    "27. zikokanjud47",
-    "28. lutpigas56",
-    "29. bagashernandez45",
-    "30. alekbengkel23",
-    "31. adengalon34",
-    "32. suprikunyat12",
-    "33. wildanbatagor01",
-    "34. nopalhuntu02",
-    "35. jamalbeti02",
-    "36. pikribakso17",
-    "37. jojonkopling04",
-    "38. totowarkop05",
-    "39. ikybotakq12",
-    "40. imanngusep23",
-    "41. ronicilok71",
-    "42. restukingzilong58",
-    "43. yusufbinucup12",
-    "44. rifkypentol89",
-    "45. alipjarcok07",
-    "46. azharkretek73",
-    "47. ridhogifary89",
-    "48. azisbarbel78",
-    "49. zikoepep12",
-    "50. hermanenginner59"
-];
-
-
-        const totalItemsPerChecklist = 10; // 10 item per checklist
-
-        function initChecklist(checklistId) {
-            const checklistContainer = document.getElementById(`checklistContainer-${checklistId}`);
-            const countdownElement = document.getElementById(`countdown-${checklistId}`);
-            const submitButton = document.getElementById(`submitButton-${checklistId}`);
-            const messageElement = document.getElementById(`message-${checklistId}`);
-
-            // Hitung indeks awal akun untuk checklist ini
-            const startIndex = (checklistId - 1) * totalItemsPerChecklist;
-
-            let checklistData = JSON.parse(localStorage.getItem(`dailyChecklist-${checklistId}`)) || {
-                items: Array(totalItemsPerChecklist).fill(false),
-                lastReset: new Date().toDateString(),
-                dayCount: checklistId === 1 ? 1 : 0,
-                isCompletedToday: false,
-                successMessage: ""
-            };
-
-            function checkReset() {
-                const today = new Date().toDateString();
-                if (checklistData.lastReset !== today) {
-                    const newDayCount = checklistData.isCompletedToday ? checklistData.dayCount + 1 : checklistData.dayCount;
-                    checklistData = {
-                        items: Array(totalItemsPerChecklist).fill(false),
-                        lastReset: today,
-                        dayCount: newDayCount,
-                        isCompletedToday: false,
-                        successMessage: ""
-                    };
-                    saveToLocalStorage();
-                }
-            }
-
-            function saveToLocalStorage() {
-                localStorage.setItem(`dailyChecklist-${checklistId}`, JSON.stringify(checklistData));
-            }
-
-            function renderChecklist() {
-                checklistContainer.innerHTML = '';
-                for (let i = 0; i < totalItemsPerChecklist; i++) {
-                    // Ambil nama akun sesuai indeks
-                    const accountName = accountNames[startIndex + i];
-                    const itemNumber = startIndex + i + 1; // Nomor item keseluruhan (1-50)
-
-                    const itemDiv = document.createElement('div');
-                    itemDiv.className = `checklist-item ${checklistData.items[i] ? 'checked' : ''}`;
-
-                    const checkboxWrapper = document.createElement('div');
-                    checkboxWrapper.style.display = 'flex';
-                    checkboxWrapper.alignItems = 'center';
-
-                    const checkbox = document.createElement('input');
-                    checkbox.type = 'checkbox';
-                    checkbox.id = `item-${checklistId}-${i}`;
-                    checkbox.checked = checklistData.items[i];
-
-                    const label = document.createElement('label');
-                    label.htmlFor = `item-${checklistId}-${i}`;
-                    label.textContent = `Misi App Melolo ${itemNumber}`;
-
-                    const accountDiv = document.createElement('div');
-                    accountDiv.className = 'account-name';
-                    accountDiv.textContent = accountName;
-
-                    checkbox.addEventListener('change', () => {
-                        checklistData.items[i] = checkbox.checked;
-                        itemDiv.classList.toggle('checked', checkbox.checked);
-                        saveToLocalStorage();
-                        updateSubmitButtonState();
-                    });
-
-                    checkboxWrapper.appendChild(checkbox);
-                    checkboxWrapper.appendChild(label);
-
-                    itemDiv.appendChild(checkboxWrapper);
-                    itemDiv.appendChild(accountDiv);
-
-                    checklistContainer.appendChild(itemDiv);
-                }
-                updateSubmitButtonState();
-                showSavedMessage(); // Panggil fungsi ini langsung setelah render
-            }
-
-            function updateSubmitButtonState() {
-                const allChecked = checklistData.items.every(item => item);
-                submitButton.disabled = !allChecked;
-            }
-
-            // Fungsi tampilkan pesan yang pasti berjalan
-            function showSavedMessage() {
-                if (checklistData.successMessage) {
-                    messageElement.textContent = checklistData.successMessage;
-                } else {
-                    messageElement.textContent = "";
-                }
-            }
-
-            function updateCountdown() {
-                const now = new Date();
-                const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
-                const timeLeft = tomorrow - now;
-                const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-                const seconds = Math.floor((timeLeft / 1000) % 60);
-                countdownElement.textContent = `Waktu tersisa sampai reset: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-            }
-
-            submitButton.addEventListener('click', () => {
-                // Buat pesan terlebih dahulu
-                const successText = `Selamat Bro Harzz! Ini Day ${checklistData.dayCount + 1} kamu menyelesaikan Checklist ${checklistId}`;
-
-                // Simpan ke data dan localStorage
-                checklistData.isCompletedToday = true;
-                checklistData.successMessage = successText;
-                saveToLocalStorage();
-
-                // Tampilkan pesan langsung tanpa nunggu apapun
-                messageElement.textContent = successText;
-            });
-
-            // Jalankan semua fungsi penting
-            checkReset();
-            renderChecklist();
-            updateCountdown();
-            showSavedMessage(); // Panggil lagi agar pesan muncul saat awal load
-
-            return { update: () => { checkReset(); updateCountdown(); } };
-        }
-
-        // Inisialisasi semua checklist
-        const checklist1 = initChecklist(1);
-        const checklist2 = initChecklist(2);
-        const checklist3 = initChecklist(3);
-        const checklist4 = initChecklist(4);
-        const checklist5 = initChecklist(5);
-
-        setInterval(() => {
-            checklist1.update();
-            checklist2.update();
-            checklist3.update();
-            checklist4.update();
-            checklist5.update();
-        }, 1000);
-    </script>
-</body>
-</html>
+  <!DOCTYPE html>
+  <html lang="id">
+  <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Misi Harian HarzzWeb</title>
+      <!-- Link Bootstrap CSS -->
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-9ndCyUaIbzAi2FUVXJi0CjmCapSmO7SnpJef0486qhLnuZ2cdeRhO02iuK6FUUVM" crossorigin="anonymous">
+      <style>
+          /* CSS native semula yang dibutuhkan */
+          * {
+              box-sizing: border-box;
+              margin: 0;
+              padding: 0;
+              font-family: 'Arial', sans-serif;
+          }
+          body {
+              background-size: cover;
+              background-position: center;
+              background-repeat: no-repeat;
+              background-attachment: fixed;
+              padding: 2rem 0;
+              position: relative;
+          }
+          body::before {
+              content: "";
+              position: fixed;
+              top: 0;
+              left: 0;
+              width: 100%;
+              height: 100%;
+              background-color: rgba(0, 0, 0, 0.3);
+              z-index: -1;
+          }
+          /* BACKGROUND MOBILE */
+          @media (max-width: 767.98px) {
+              body {
+                  background-image: url('bg-japan.jpg');
+                  z-index: 1;
+              }
+          }
+          /* BACKGROUND DESKTOP */
+          @media (min-width: 768px) {
+              body {
+                  background-image: url('china nightcity.jpeg');
+                  z-index: 1;
+              }
+          }
+          .main-title {
+              color: white;
+              text-align: center;
+              margin-bottom: 2rem;
+              text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
+          }
+          .countdown {
+              font-size: 1.2rem;
+              color: #2d3748;
+              text-align: center;
+              margin-bottom: 1.5rem;
+              padding: 0.75rem;
+              background-color: rgba(226, 232, 240, 0.9);
+              border-radius: 0.5rem;
+              text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+          }
+          .checklist-item {
+              display: flex;
+              align-items: center;
+              justify-content: space-between; /* Biar nama akun ada di kanan */
+              padding: 0.8rem 0;
+              border-bottom: 1px solid #edf2f7;
+          }
+          .checklist-item:last-child {
+              border-bottom: none;
+          }
+          input[type="checkbox"] {
+              width: 1.2rem;
+              height: 1.2rem;
+              margin-right: 1rem;
+              cursor: pointer;
+          }
+          .checked label, .checked .account-name {
+              text-decoration: line-through;
+              color: #718096;
+          }
+          label {
+              font-size: 1.1rem;
+              color: #2d3748;
+              cursor: pointer;
+              text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+          }
+          .account-name {
+              font-size: 1rem;
+              color: #4a5568;
+              text-align: right;
+              text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.3);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis; /* Biar gak ke luar kalo nama panjang */
+              max-width: 45%; /* Lebar maksimum nama akun */
+          }
+          /* Tombol Submit */
+          .submit-button {
+              display: block;
+              width: 100%;
+              padding: 1rem;
+              margin-top: 1.5rem;
+              border: none;
+              border-radius: 8px;
+              color: white;
+              font-size: 1.1rem;
+              cursor: pointer;
+              transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease-in-out;
+              text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+          }
+          .submit-button:disabled {
+              background-color: rgba(144, 238, 144, 0.9);
+              cursor: not-allowed;
+              box-shadow: none;
+              transform: scale(1);
+          }
+          .submit-button:not(:disabled) {
+              background-color: rgba(50, 205, 50, 0.9);
+              box-shadow: 0 4px 12px rgba(50, 205, 50, 0.7);
+          }
+          .submit-button:not(:disabled):hover {
+              background-color: rgba(0, 128, 0, 0.9);
+              box-shadow: 0 6px 15px rgba(0, 128, 0, 0.8);
+              transform: scale(1.05);
+          }
+          /* Pesan Selamat */
+          .message {
+              text-align: center;
+              margin-top: 1rem;
+              color: #2d3748;
+              font-weight: bold;
+              padding: 0.5rem;
+              border-radius: 8px;
+              background-color: rgba(212, 237, 218, 0.9);
+              min-height: 45px;
+              text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+          }
+          /* Card */
+          .card {
+              background-color: rgba(255, 255, 255, 0.85);
+              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+          }
+          .card-body h2 {
+              color: #2d3748;
+              text-shadow: 1px 1px 2px rgba(255, 255, 255, 0.5);
+          }
+      </style>
+  </head>
+  <body>
+      <div class="container">
+          <h1 class="text-center fw-bold mb-5 main-title">Daftar Misi Harian Harzz</h1>
+  
+          <div class="row g-4">
+              <!-- Checklist 1 (Item 1-10) -->
+              <div class="col-md-6 col-lg-4">
+                  <div class="card shadow-sm h-100">
+                      <div class="card-body">
+                          <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 1</h2>
+                          <div class="countdown" id="countdown-1">Waktu tersisa sampai reset: 23:59:59</div>
+                          <div id="checklistContainer-1"></div>
+                          <button class="submit-button" id="submitButton-1" disabled>Submit Checklist 1</button>
+                          <div class="message" id="message-1"></div>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Checklist 2 (Item 31-40) - yang lama Checklist 4 -->
+              <div class="col-md-6 col-lg-4">
+                  <div class="card shadow-sm h-100">
+                      <div class="card-body">
+                          <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 2</h2>
+                          <div class="countdown" id="countdown-2">Waktu tersisa sampai reset: 23:59:59</div>
+                          <div id="checklistContainer-2"></div>
+                          <button class="submit-button" id="submitButton-2" disabled>Submit Checklist 2</button>
+                          <div class="message" id="message-2"></div>
+                      </div>
+                  </div>
+              </div>
+  
+              <!-- Checklist 3 (Item 41-50) - yang lama Checklist 5 -->
+              <div class="col-md-6 col-lg-4">
+                  <div class="card shadow-sm h-100">
+                      <div class="card-body">
+                          <h2 class="text-center mb-4" style="font-size: 1.25rem;">Checklist Harian 3</h2>
+                          <div class="countdown" id="countdown-3">Waktu tersisa sampai reset: 23:59:59</div>
+                          <div id="checklistContainer-3"></div>
+                          <button class="submit-button" id="submitButton-3" disabled>Submit Checklist 3</button>
+                          <div class="message" id="message-3"></div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+      </div>
+  
+      <!-- Bootstrap JS -->
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-geWF76RCwLtnZ8qwWowPQNguL3RmwHVBC9FhGdlKrxdiJJigb/j/68SIy3Te4Bkz" crossorigin="anonymous"></script>
+      <script>
+        // Daftar nama akun HANYA 1-10 DAN 31-50 (AKUN 11-30 DIHAPUS TOTAL!)
+  const accountNames = [
+      // CHECKLIST 1 = ITEM 1-10
+      "1. agustytyd30 ",
+      "2. agustytyd41 ",
+      "3. aguskuntul59",
+      "4. aguskunn78",
+      "5. aguskoncol47",
+      "6. aguslesnang24",
+      "7. aguskupling19",
+      "8. asepkanjud73",
+      "9. asepgwalon76",
+      "10. aseprahmadt98",
+  
+      // CHECKLIST 2 = ITEM 31-40 (AKUN 11-30 DIHAPUS!)
+      "31. adengalon34",
+      "32. suprikunyat12",
+      "33. wildanbatagor01",
+      "34. nopalhuntu02",
+      "35. jamalbeti02",
+      "36. pikribakso17",
+      "37. jojonkopling04",
+      "38. totowarkop05",
+      "39. ikybotakq12",
+      "40. imanngusep23",
+  
+      // CHECKLIST 3 = ITEM 41-50
+      "41. ronicilok71",
+      "42. restukingzilong58",
+      "43. yusufbinucup12",
+      "44. rifkypentol89",
+      "45. alipjarcok07",
+      "46. azharkretek73",
+      "47. ridhogifary89",
+      "48. azisbarbel78",
+      "49. zikoepep12",
+      "50. hermanenginner59"
+  ];
+  
+  
+  const totalItemsPerChecklist = 10; // 10 item per checklist
+  
+  function initChecklist(checklistId) {
+      const checklistContainer = document.getElementById(`checklistContainer-${checklistId}`);
+      const countdownElement = document.getElementById(`countdown-${checklistId}`);
+      const submitButton = document.getElementById(`submitButton-${checklistId}`);
+      const messageElement = document.getElementById(`message-${checklistId}`);
+  
+      // INDEKS AWAL SESUAI DAFTAR YANG SUDAH DIHAPUS AKUN 11-30:
+      // Checklist 1 = Indeks 0-9 (Item 1-10)
+      // Checklist 2 = Indeks 10-19 (Item 31-40)
+      // Checklist 3 = Indeks 20-29 (Item 41-50)
+      let startIndex;
+      if (checklistId === 1) {
+          startIndex = 0;
+      } else if (checklistId === 2) {
+          startIndex = 10;
+      } else if (checklistId === 3) {
+          startIndex = 20;
+      }
+  
+      let checklistData = JSON.parse(localStorage.getItem(`dailyChecklist-${checklistId}`)) || {
+          items: Array(totalItemsPerChecklist).fill(false),
+          lastReset: new Date().toDateString(),
+          dayCount: checklistId === 1 ? 1 : 0,
+          isCompletedToday: false,
+          successMessage: ""
+      };
+  
+      function checkReset() {
+          const today = new Date().toDateString();
+          if (checklistData.lastReset !== today) {
+              const newDayCount = checklistData.isCompletedToday ? checklistData.dayCount + 1 : checklistData.dayCount;
+              checklistData = {
+                  items: Array(totalItemsPerChecklist).fill(false),
+                  lastReset: today,
+                  dayCount: newDayCount,
+                  isCompletedToday: false,
+                  successMessage: ""
+              };
+              saveToLocalStorage();
+          }
+      }
+  
+      function saveToLocalStorage() {
+          localStorage.setItem(`dailyChecklist-${checklistId}`, JSON.stringify(checklistData));
+      }
+  
+      function renderChecklist() {
+          checklistContainer.innerHTML = '';
+          for (let i = 0; i < totalItemsPerChecklist; i++) {
+              const accountName = accountNames[startIndex + i];
+              // Ambil nomor item yang benar dari nama akun
+              const itemNumber = accountName.split('.')[0];
+  
+              const itemDiv = document.createElement('div');
+              itemDiv.className = `checklist-item ${checklistData.items[i] ? 'checked' : ''}`;
+  
+              const checkboxWrapper = document.createElement('div');
+              checkboxWrapper.style.display = 'flex';
+              checkboxWrapper.alignItems = 'center';
+  
+              const checkbox = document.createElement('input');
+              checkbox.type = 'checkbox';
+              checkbox.id = `item-${checklistId}-${i}`;
+              checkbox.checked = checklistData.items[i];
+  
+              const label = document.createElement('label');
+              label.htmlFor = `item-${checklistId}-${i}`;
+              label.textContent = `Misi App Melolo ${itemNumber}`;
+  
+              const accountDiv = document.createElement('div');
+              accountDiv.className = 'account-name';
+              accountDiv.textContent = accountName;
+  
+              checkbox.addEventListener('change', () => {
+                  checklistData.items[i] = checkbox.checked;
+                  itemDiv.classList.toggle('checked', checkbox.checked);
+                  saveToLocalStorage();
+                  updateSubmitButtonState();
+              });
+  
+              checkboxWrapper.appendChild(checkbox);
+              checkboxWrapper.appendChild(label);
+              itemDiv.appendChild(checkboxWrapper);
+              itemDiv.appendChild(accountDiv);
+  
+              checklistContainer.appendChild(itemDiv);
+          }
+          updateSubmitButtonState();
+          showSavedMessage();
+      }
+  
+      function updateSubmitButtonState() {
+          const allChecked = checklistData.items.every(item => item);
+          submitButton.disabled = !allChecked;
+      }
+  
+      function showSavedMessage() {
+          messageElement.textContent = checklistData.successMessage || "";
+      }
+  
+      function updateCountdown() {
+          const now = new Date();
+          const tomorrow = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1);
+          const timeLeft = tomorrow - now;
+          const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
+          const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
+          const seconds = Math.floor((timeLeft / 1000) % 60);
+          countdownElement.textContent = `Waktu tersisa sampai reset: ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      }
+  
+      submitButton.addEventListener('click', () => {
+          const successText = `Selamat Bro Harzz! Ini Day ${checklistData.dayCount + 1} kamu menyelesaikan Checklist ${checklistId}`;
+          checklistData.isCompletedToday = true;
+          checklistData.successMessage = successText;
+          saveToLocalStorage();
+          messageElement.textContent = successText;
+      });
+  
+      checkReset();
+      renderChecklist();
+      updateCountdown();
+      showSavedMessage();
+  
+      return { update: () => { checkReset(); updateCountdown(); } };
+  }
+  
+  // INISIALISASI HANYA 3 CHECKLIST
+  const checklist1 = initChecklist(1);
+  const checklist2 = initChecklist(2);
+  const checklist3 = initChecklist(3);
+  
+  setInterval(() => {
+      checklist1.update();
+      checklist2.update();
+      checklist3.update();
+  }, 1000);
+  
+      </script>
+  </body>
+  </html>
